@@ -14,6 +14,6 @@ public class Register {
         this.roleSelect = roleSelect; // Normal Student or Rider
     }
 
-    VehicleRegistration vR = vR();
+    // VehicleRegistration vR = vR();
 
 }
