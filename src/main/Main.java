@@ -6,12 +6,12 @@ import service.Register;
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        int option = sc.nextInt();
         
         System.out.println("--------- Welcome to Hamdard Connect ---------");
         System.out.println("1. Register");
         System.out.println("2. Login");
         System.out.println("3. Exit");
+        int option = sc.nextInt();
         sc.nextLine();
 
         switch(option) {
