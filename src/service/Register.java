@@ -4,7 +4,7 @@ public class Register {
     private String password;
     Vehicle vehicle;
     
-    Register(String cms, String phoneNumber, String name, String pass, String dept, String program, String gender, String roleSelect) {
+    public Register(String cms, String phoneNumber, String name, String pass, String dept, String program, String gender, String roleSelect) {
         this.cms = cms;
         this.phoneNumber = phoneNumber;
         this.name = name;
