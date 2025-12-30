@@ -2,7 +2,6 @@ package datastructures;
 
 public class HashMap<K, V> {
     
-    // Inner class for storing key-value pairs (Nodes in linked list for chaining)
     private class Node {
         K key;
         V value;
@@ -15,61 +14,63 @@ public class HashMap<K, V> {
         }
     }
     
-    private Node[] buckets;  // Array of linked lists
-    private int size;        // Number of key-value pairs
-    private int capacity;    // Array size
+    private Object[] buckets;  // Change: Node[] → Object[]
+    private int size;
+    private int capacity;
     
     // Constructor
     public HashMap() {
-        this.capacity = 16;  // Default capacity
-        this.buckets = (Node[]) new Object[capacity];
+        this.capacity = 16;
+        this.buckets = new Object[capacity];  // ✅ Direct Object array
         this.size = 0;
     }
     
     public HashMap(int capacity) {
         this.capacity = capacity;
-        this.buckets = (Node[]) new Object[capacity];
+        this.buckets = new Object[capacity];  // ✅ Direct Object array
         this.size = 0;
     }
     
-    // Hash function - converts key to index
+    // Hash function
     private int getBucketIndex(K key) {
         int hashCode = key.hashCode();
         return Math.abs(hashCode) % capacity;
     }
     
     // Insert or Update
+    @SuppressWarnings("unchecked")
     public void put(K key, V value) {
         int bucketIndex = getBucketIndex(key);
-        Node head = buckets[bucketIndex];
+        Node head = (Node) buckets[bucketIndex];  // ✅ Cast here
         
-        // Check if key already exists (update case)
+        // Check if key already exists
         Node current = head;
         while (current != null) {
             if (current.key.equals(key)) {
-                current.value = value;  // Update existing value
+                current.value = value;
                 return;
             }
             current = current.next;
         }
         
-        // Key doesn't exist - insert new node at head
+        // Insert new node
         Node newNode = new Node(key, value);
         newNode.next = head;
         buckets[bucketIndex] = newNode;
         size++;
         
-        // Check if rehashing is needed (load factor > 0.75)
+        // Rehash if needed
         double loadFactor = (double) size / capacity;
         if (loadFactor > 0.75) {
             rehash();
         }
     }
     
-    // Search - returns value if key exists, null otherwise
+    // Search
+    @SuppressWarnings("unchecked")
     public V get(K key) {
         int bucketIndex = getBucketIndex(key);
-        Node head = buckets[bucketIndex];
+        Node head = (Node) buckets[bucketIndex];  // ✅ Cast here
         
         Node current = head;
         while (current != null) {
@@ -79,7 +80,7 @@ public class HashMap<K, V> {
             current = current.next;
         }
         
-        return null;  // Key not found
+        return null;
     }
     
     // Check if key exists
@@ -87,17 +88,17 @@ public class HashMap<K, V> {
         return get(key) != null;
     }
     
-    // Remove a key-value pair
+    // Remove
+    @SuppressWarnings("unchecked")
     public V remove(K key) {
         int bucketIndex = getBucketIndex(key);
-        Node head = buckets[bucketIndex];
+        Node head = (Node) buckets[bucketIndex];  // ✅ Cast here
         
-        // If bucket is empty
         if (head == null) {
             return null;
         }
         
-        // If head node contains the key
+        // If head contains the key
         if (head.key.equals(key)) {
             V removedValue = head.value;
             buckets[bucketIndex] = head.next;
@@ -105,7 +106,7 @@ public class HashMap<K, V> {
             return removedValue;
         }
         
-        // Search in the rest of the linked list
+        // Search in rest
         Node prev = head;
         Node current = head.next;
         
@@ -120,7 +121,7 @@ public class HashMap<K, V> {
             current = current.next;
         }
         
-        return null;  // Key not found
+        return null;
     }
     
     // Get size
@@ -133,15 +134,17 @@ public class HashMap<K, V> {
         return size == 0;
     }
     
-    // Rehashing - double the capacity when load factor exceeds threshold
+    // Rehashing
+    @SuppressWarnings("unchecked")
     private void rehash() {
-        Node[] oldBuckets = buckets;
+        Object[] oldBuckets = buckets;
         capacity = capacity * 2;
-        this.buckets = (Node[]) new Object[capacity];
+        buckets = new Object[capacity];  // ✅ Direct Object array
         size = 0;
         
         // Reinsert all elements
-        for (Node head : oldBuckets) {
+        for (Object bucket : oldBuckets) {
+            Node head = (Node) bucket;  // ✅ Cast here
             Node current = head;
             while (current != null) {
                 put(current.key, current.value);
@@ -150,13 +153,14 @@ public class HashMap<K, V> {
         }
     }
     
-    // Display all key-value pairs
+    // Display
+    @SuppressWarnings("unchecked")
     public void display() {
         System.out.println("\n--- HashMap Contents ---");
         for (int i = 0; i < capacity; i++) {
             if (buckets[i] != null) {
                 System.out.print("Bucket " + i + ": ");
-                Node current = buckets[i];
+                Node current = (Node) buckets[i];  // ✅ Cast here
                 while (current != null) {
                     System.out.print("[" + current.key + " -> " + current.value + "] ");
                     current = current.next;
