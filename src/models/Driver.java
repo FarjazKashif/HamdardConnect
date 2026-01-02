@@ -1,5 +1,7 @@
 package models;
 
+import datastructures.LinkedList;
+
 public class Driver {
     private int driverID;
     private String name;
@@ -10,6 +12,7 @@ public class Driver {
     private boolean isAvailable;
     private double rating;
     private int totalRides;
+    private LinkedList<Integer> acceptedRequests;
     
     // Constructor
     public Driver(int driverID, String name, String phoneNumber, 
@@ -23,6 +26,7 @@ public class Driver {
         this.isAvailable = true;
         this.rating = 5.0;
         this.totalRides = 0;
+        this.acceptedRequests = new LinkedList<>();
     }
     
     // Getters
@@ -62,6 +66,10 @@ public class Driver {
         return totalRides;
     }
     
+    public LinkedList<Integer> getAcceptedRequests() {
+        return acceptedRequests;
+    }
+    
     // Setters
     public void setCurrentLocation(String currentLocation) {
         this.currentLocation = currentLocation;
@@ -79,6 +87,16 @@ public class Driver {
         this.rating = ((this.rating * this.totalRides) + newRating) / (this.totalRides + 1);
     }
     
+    // Add accepted request to history
+    public void addAcceptedRequest(int requestID) {
+        acceptedRequests.insertAtEnd(requestID);
+    }
+    
+    // Get total accepted requests
+    public int getTotalAcceptedRequests() {
+        return acceptedRequests.size();
+    }
+    
     // Display
     public void displayInfo() {
         System.out.println("\n--- Driver Info ---");
@@ -90,5 +108,18 @@ public class Driver {
         System.out.println("Available: " + (isAvailable ? "Yes" : "No"));
         System.out.println("Rating: " + String.format("%.2f", rating) + "/5.0");
         System.out.println("Total Rides: " + totalRides);
+        System.out.println("Accepted Requests: " + getTotalAcceptedRequests());
+    }
+    
+    // Display accepted requests
+    public void displayAcceptedRequests() {
+        System.out.println("\n--- Accepted Requests for " + name + " ---");
+        if (acceptedRequests.isEmpty()) {
+            System.out.println("No accepted requests yet");
+        } else {
+            System.out.println("Total accepted: " + acceptedRequests.size());
+            System.out.print("Request IDs: ");
+            acceptedRequests.display();
+        }
     }
 }
