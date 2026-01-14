@@ -1,13 +1,10 @@
-import datastructures.HashMap;
-import datastructures.LinkedList;
-import datastructures.Stack;
-import datastructures.Heap;
 import datastructures.Graph;
-import models.Student;
+import datastructures.HashMap;
+import datastructures.Stack;
+import java.util.Scanner;
 import models.Driver;
 import models.Request;
-
-import java.util.Scanner;
+import models.Student;
 
 public class Main {
     
@@ -38,46 +35,34 @@ public class Main {
             
             switch (choice) {
                 case 1:
-                    registerStudent();
+                    registerRiderGoingHome();
                     break;
                 case 2:
-                    registerDriver();
-                    break;
-                case 3:
-                    viewAllStudents();
-                    break;
-                case 4:
-                    viewAllDrivers();
-                    break;
-                case 5:
-                    generateRideRequest();
-                    break;
-                case 6:
-                    viewAllRequests();
-                    break;
-                case 7:
-                    matchDriverToRequest();
-                    break;
-                case 8:
-                    autoMatchBestDriver();
-                    break;
-                case 9:
-                    viewStudentRideHistory();
-                    break;
-                case 10:
                     viewDriverAcceptedRequests();
                     break;
-                case 11:
+                case 3:
                     updateDriverLocation();
                     break;
-                case 12:
-                    viewCampusRoutes();
+                case 4:
+                    studentNeedsRide();
                     break;
-                case 13:
-                    undoLastAction();
+                case 5:
+                    viewAvailableRidersForStudent();
                     break;
-                case 14:
-                    viewActionHistory();
+                case 6:
+                    bookARider();
+                    break;
+                case 7:
+                    viewStudentRideHistory();
+                    break;
+                case 8:
+                    viewAllDrivers();
+                    break;
+                case 9:
+                    viewAllStudents();
+                    break;
+                case 10:
+                    viewAllRequests();
                     break;
                 case 0:
                     running = false;
@@ -94,31 +79,31 @@ public class Main {
     // Display main menu
     private static void displayMainMenu() {
         System.out.println("\n================================================");
-        System.out.println("         HAMDARD CONNECT - MAIN MENU           ");
+        System.out.println("            HAMDARD CONNECT                     ");
+        System.out.println("   Connect with riders going your way!          ");
         System.out.println("================================================");
-        System.out.println("1.  Register Student");
-        System.out.println("2.  Register Driver");
-        System.out.println("3.  View All Students");
-        System.out.println("4.  View All Drivers");
-        System.out.println("5.  Generate Ride Request");
-        System.out.println("6.  View All Requests");
-        System.out.println("7.  Manual Match Driver to Request");
-        System.out.println("8.  Auto Match Best Driver to Request");
-        System.out.println("9.  View Student Ride History");
-        System.out.println("10. View Driver Accepted Requests");
-        System.out.println("11. Update Driver Location");
-        System.out.println("12. View Campus Routes");
-        System.out.println("13. Undo Last Action");
-        System.out.println("14. View Action History");
-        System.out.println("0.  Exit");
+        System.out.println("\n--- RIDER OPTIONS ---");
+        System.out.println("1. I am going home (Register as Rider)");
+        System.out.println("2. View my accepted rides");
+        System.out.println("3. Update my location");
+        System.out.println("\n--- STUDENT OPTIONS ---");
+        System.out.println("4. I need a ride (Create ride request)");
+        System.out.println("5. View available riders going my way");
+        System.out.println("6. Book a rider");
+        System.out.println("7. View my ride history");
+        System.out.println("\n--- ADMIN/VIEW OPTIONS ---");
+        System.out.println("8. View all riders");
+        System.out.println("9. View all students");
+        System.out.println("10. View all ride requests");
+        System.out.println("\n0. Exit");
         System.out.println("================================================");
     }
     
     // Initialize sample data
     private static void initializeSampleData() {
-        System.out.println("Initializing system with sample data...\n");
+        System.out.println("Initializing Hamdard Connect...\n");
         
-        // Sample students
+        // Sample students who need rides
         Student s1 = new Student(101, "Ali Ahmed", "03001234567");
         Student s2 = new Student(102, "Sara Khan", "03009876543");
         Student s3 = new Student(103, "Hassan Raza", "03001111111");
@@ -127,20 +112,20 @@ public class Main {
         studentMap.put(s2.getStudentID(), s2);
         studentMap.put(s3.getStudentID(), s3);
         
-        // Sample drivers
+        // Sample riders going home
         Driver d1 = new Driver(201, "Ahmed Ali", "03002222222", "Bike", "ABC-123");
         Driver d2 = new Driver(202, "Bilal Khan", "03003333333", "Car", "XYZ-456");
         Driver d3 = new Driver(203, "Imran Shah", "03004444444", "Bike", "DEF-789");
         
         d1.setCurrentLocation("Gate");
-        d2.setCurrentLocation("Gulshan");
-        d3.setCurrentLocation("Clifton");
+        d2.setCurrentLocation("Gate");
+        d3.setCurrentLocation("Gate");
         
         driverMap.put(d1.getDriverID(), d1);
         driverMap.put(d2.getDriverID(), d2);
         driverMap.put(d3.getDriverID(), d3);
         
-        // Setup campus graph
+        // Setup campus routes
         campusGraph.addLocation("Gate");
         campusGraph.addLocation("Gulshan");
         campusGraph.addLocation("Clifton");
@@ -154,74 +139,187 @@ public class Main {
         campusGraph.addRoute("Gate", "Saddar", 6.0);
         campusGraph.addRoute("Saddar", "Clifton", 5.0);
         
-        System.out.println("Sample data loaded successfully!");
-        System.out.println("   - 3 Students registered");
-        System.out.println("   - 3 Drivers registered");
-        System.out.println("   - 5 Campus locations added");
-        System.out.println("   - 6 Routes configured");
+        System.out.println("System ready!");
+        System.out.println("Sample users loaded (3 students, 3 riders)");
+        System.out.println("Campus routes configured\n");
     }
     
-    // Register new student
-    private static void registerStudent() {
-        System.out.println("\n=== REGISTER STUDENT ===");
+    // Rider: Register as going home
+    private static void registerRiderGoingHome() {
+        System.out.println("\n=== I AM GOING HOME ===");
         
-        int id = getIntInput("Enter Student ID: ");
+        int id = getIntInput("Enter your ID: ");
         
-        if (studentMap.containsKey(id)) {
-            System.out.println("Student with ID " + id + " already exists!");
-            return;
+        Driver driver = driverMap.get(id);
+        
+        if (driver == null) {
+            System.out.println("ID not found. Let's register you first.");
+            System.out.print("Enter Name: ");
+            String name = scanner.nextLine();
+            
+            System.out.print("Enter Phone Number: ");
+            String phone = scanner.nextLine();
+            
+            System.out.print("Enter Vehicle Type (Bike/Car): ");
+            String vehicleType = scanner.nextLine();
+            
+            System.out.print("Enter Vehicle Number: ");
+            String vehicleNumber = scanner.nextLine();
+            
+            driver = new Driver(id, name, phone, vehicleType, vehicleNumber);
+            driverMap.put(id, driver);
+            
+            actionHistory.push("REGISTER_DRIVER:" + id);
         }
         
-        System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
+        System.out.print("Where are you going? (e.g., Gulshan, Clifton, DHA): ");
+        String destination = scanner.nextLine();
         
-        System.out.print("Enter Phone Number: ");
-        String phone = scanner.nextLine();
+        driver.setCurrentLocation("Gate");
+        driver.setAvailable(true);
         
-        Student student = new Student(id, name, phone);
-        studentMap.put(id, student);
-        
-        actionHistory.push("REGISTER_STUDENT:" + id);
-        
-        System.out.println("Student registered successfully!");
-        student.displayInfo();
-    }
-    
-    // Register new driver
-    private static void registerDriver() {
-        System.out.println("\n=== REGISTER DRIVER ===");
-        
-        int id = getIntInput("Enter Driver ID: ");
-        
-        if (driverMap.containsKey(id)) {
-            System.out.println("Driver with ID " + id + " already exists!");
-            return;
-        }
-        
-        System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
-        
-        System.out.print("Enter Phone Number: ");
-        String phone = scanner.nextLine();
-        
-        System.out.print("Enter Vehicle Type (Bike/Car): ");
-        String vehicleType = scanner.nextLine();
-        
-        System.out.print("Enter Vehicle Number: ");
-        String vehicleNumber = scanner.nextLine();
-        
-        Driver driver = new Driver(id, name, phone, vehicleType, vehicleNumber);
-        driverMap.put(id, driver);
-        
-        actionHistory.push("REGISTER_DRIVER:" + id);
-        
-        System.out.println("Driver registered successfully!");
+        System.out.println("\nYou are now ACTIVE and going to " + destination);
+        System.out.println("Students can now see you in available riders list!");
         driver.displayInfo();
+    }
+    
+    // Student: I need a ride
+    private static void studentNeedsRide() {
+        System.out.println("\n=== I NEED A RIDE ===");
+        
+        int studentID = getIntInput("Enter your Student ID: ");
+        
+        Student student = studentMap.get(studentID);
+        
+        if (student == null) {
+            System.out.println("ID not found. Let's register you first.");
+            System.out.print("Enter Name: ");
+            String name = scanner.nextLine();
+            
+            System.out.print("Enter Phone Number: ");
+            String phone = scanner.nextLine();
+            
+            student = new Student(studentID, name, phone);
+            studentMap.put(studentID, student);
+            
+            actionHistory.push("REGISTER_STUDENT:" + studentID);
+        }
+        
+        System.out.print("Where do you want to go? ");
+        String destination = scanner.nextLine();
+        
+        System.out.println("\nSelect urgency:");
+        System.out.println("1. Normal (going at regular time)");
+        System.out.println("2. Medium (finishing early)");
+        System.out.println("3. High (need to leave soon)");
+        System.out.println("4. Emergency (missed transport)");
+        int priority = getIntInput("Enter urgency (1-4): ");
+        
+        if (priority < 1 || priority > 4) {
+            priority = 1;
+        }
+        
+        Request request = new Request(requestCounter++, studentID, "Gate", destination, priority);
+        requestMap.put(request.getRequestID(), request);
+        
+        actionHistory.push("GENERATE_REQUEST:" + request.getRequestID());
+        
+        System.out.println("\nRide request created successfully!");
+        System.out.println("Request ID: " + request.getRequestID());
+        System.out.println("\nNext step: View available riders going your way (Option 5)");
+    }
+    
+    // Student: View available riders
+    private static void viewAvailableRidersForStudent() {
+        System.out.println("\n=== RIDERS GOING YOUR WAY ===");
+        
+        System.out.print("Where do you want to go? ");
+        String destination = scanner.nextLine();
+        
+        System.out.println("\nAvailable riders:");
+        System.out.println("------------------------------------------------");
+        
+        boolean found = false;
+        for (int id : knownDriverIDs) {
+            Driver d = driverMap.get(id);
+            if (d != null && d.isAvailable()) {
+                System.out.println("\n[ID: " + id + "] " + d.getName());
+                System.out.println("   Vehicle: " + d.getVehicleType() + " (" + d.getVehicleNumber() + ")");
+                System.out.println("   Phone: " + d.getPhoneNumber());
+                System.out.println("   Rating: " + String.format("%.1f", d.getRating()) + "/5.0");
+                System.out.println("   Total Rides: " + d.getTotalRides());
+                found = true;
+            }
+        }
+        
+        if (!found) {
+            System.out.println("No riders available right now.");
+            System.out.println("Try again in a few minutes or create a ride request.");
+        }
+        
+        System.out.println("------------------------------------------------");
+        System.out.println("\nRemember the ID and use Option 6 to book!");
+    }
+    
+    // Student: Book a rider
+    private static void bookARider() {
+        System.out.println("\n=== BOOK A RIDER ===");
+        
+        int requestID = getIntInput("Enter your Request ID: ");
+        Request request = requestMap.get(requestID);
+        
+        if (request == null) {
+            System.out.println("Request not found! Please create a ride request first (Option 4)");
+            return;
+        }
+        
+        if (!request.getStatus().equals("Pending")) {
+            System.out.println("This request is already " + request.getStatus());
+            return;
+        }
+        
+        System.out.println("\nYour request details:");
+        request.displayInfo();
+        
+        System.out.println("\nAvailable riders:");
+        viewAvailableDriversShort();
+        
+        int driverID = getIntInput("\nEnter Rider ID you want to book: ");
+        Driver driver = driverMap.get(driverID);
+        
+        if (driver == null) {
+            System.out.println("Rider not found!");
+            return;
+        }
+        
+        if (!driver.isAvailable()) {
+            System.out.println("Rider is not available anymore!");
+            return;
+        }
+        
+        request.setAssignedDriverID(driverID);
+        request.setStatus("Accepted");
+        driver.setAvailable(false);
+        driver.incrementTotalRides();
+        driver.addAcceptedRequest(requestID);
+        
+        Student student = studentMap.get(request.getStudentID());
+        if (student != null) {
+            student.addRideToHistory(requestID);
+        }
+        
+        actionHistory.push("MATCH_DRIVER:" + requestID + ":" + driverID);
+        
+        System.out.println("\n=== RIDE CONFIRMED ===");
+        System.out.println("Rider: " + driver.getName());
+        System.out.println("Phone: " + driver.getPhoneNumber());
+        System.out.println("Vehicle: " + driver.getVehicleType() + " " + driver.getVehicleNumber());
+        System.out.println("\nContact your rider and meet at the pickup point!");
     }
     
     // View all students
     private static void viewAllStudents() {
-        System.out.println("\n=== ALL REGISTERED STUDENTS ===");
+        System.out.println("\n=== ALL STUDENTS ===");
         
         if (studentMap.isEmpty()) {
             System.out.println("No students registered yet!");
@@ -237,23 +335,22 @@ public class Main {
                 System.out.println("\n[ID: " + id + "] " + s.getName());
                 System.out.println("   Phone: " + s.getPhoneNumber());
                 System.out.println("   Location: " + s.getCurrentLocation());
-                System.out.println("   Status: " + (s.isActive() ? "Active" : "Inactive"));
                 System.out.println("   Total Rides: " + s.getTotalRides());
             }
         }
         System.out.println("------------------------------------------------");
     }
     
-    // View all drivers with proper list
+    // View all drivers
     private static void viewAllDrivers() {
-        System.out.println("\n=== ALL REGISTERED DRIVERS ===");
+        System.out.println("\n=== ALL RIDERS ===");
         
         if (driverMap.isEmpty()) {
-            System.out.println("No drivers registered yet!");
+            System.out.println("No riders registered yet!");
             return;
         }
         
-        System.out.println("Total Drivers: " + driverMap.size());
+        System.out.println("Total Riders: " + driverMap.size());
         System.out.println("------------------------------------------------");
         
         for (int id : knownDriverIDs) {
@@ -269,45 +366,6 @@ public class Main {
             }
         }
         System.out.println("------------------------------------------------");
-    }
-    
-    // Generate ride request
-    private static void generateRideRequest() {
-        System.out.println("\n=== GENERATE RIDE REQUEST ===");
-        
-        int studentID = getIntInput("Enter Student ID: ");
-        
-        Student student = studentMap.get(studentID);
-        if (student == null) {
-            System.out.println("Student not found!");
-            return;
-        }
-        
-        System.out.print("Enter Pickup Location: ");
-        String pickup = scanner.nextLine();
-        
-        System.out.print("Enter Drop Location: ");
-        String drop = scanner.nextLine();
-        
-        System.out.println("Select Priority:");
-        System.out.println("1. Low");
-        System.out.println("2. Medium");
-        System.out.println("3. High");
-        System.out.println("4. Emergency");
-        int priority = getIntInput("Enter priority (1-4): ");
-        
-        if (priority < 1 || priority > 4) {
-            System.out.println("Invalid priority!");
-            return;
-        }
-        
-        Request request = new Request(requestCounter++, studentID, pickup, drop, priority);
-        requestMap.put(request.getRequestID(), request);
-        
-        actionHistory.push("GENERATE_REQUEST:" + request.getRequestID());
-        
-        System.out.println("Ride request generated successfully!");
-        request.displayInfo();
     }
     
     // View all requests
@@ -327,163 +385,22 @@ public class Main {
             if (req != null) {
                 System.out.println("\n[Request ID: " + i + "]");
                 System.out.println("   Student ID: " + req.getStudentID());
-                System.out.println("   From: " + req.getPickupLocation());
-                System.out.println("   To: " + req.getDropLocation());
-                System.out.println("   Priority: " + req.getPriority());
+                System.out.println("   Going to: " + req.getDropLocation());
+                System.out.println("   Urgency: " + req.getPriority());
                 System.out.println("   Status: " + req.getStatus());
                 if (req.getAssignedDriverID() != null) {
-                    System.out.println("   Driver ID: " + req.getAssignedDriverID());
+                    System.out.println("   Rider ID: " + req.getAssignedDriverID());
                 }
             }
         }
         System.out.println("------------------------------------------------");
     }
     
-    // Manual match driver to request
-    private static void matchDriverToRequest() {
-        System.out.println("\n=== MANUAL MATCH DRIVER TO REQUEST ===");
-        
-        // First show available drivers
-        System.out.println("\nAvailable Drivers:");
-        viewAvailableDriversShort();
-        
-        int requestID = getIntInput("\nEnter Request ID: ");
-        Request request = requestMap.get(requestID);
-        
-        if (request == null) {
-            System.out.println("Request not found!");
-            return;
-        }
-        
-        if (!request.getStatus().equals("Pending")) {
-            System.out.println("Request is already " + request.getStatus());
-            return;
-        }
-        
-        int driverID = getIntInput("Enter Driver ID from above list: ");
-        Driver driver = driverMap.get(driverID);
-        
-        if (driver == null) {
-            System.out.println("Driver not found!");
-            return;
-        }
-        
-        if (!driver.isAvailable()) {
-            System.out.println("Driver is not available!");
-            return;
-        }
-        
-        // Match driver to request
-        request.setAssignedDriverID(driverID);
-        request.setStatus("Accepted");
-        driver.setAvailable(false);
-        driver.incrementTotalRides();
-        driver.addAcceptedRequest(requestID);
-        
-        // Add to student history
-        Student student = studentMap.get(request.getStudentID());
-        if (student != null) {
-            student.addRideToHistory(requestID);
-        }
-        
-        actionHistory.push("MATCH_DRIVER:" + requestID + ":" + driverID);
-        
-        System.out.println("Driver matched successfully!");
-        System.out.println("Driver: " + driver.getName() + " assigned to Request #" + requestID);
-    }
-    
-    // Auto match best driver using Heap and Graph
-    private static void autoMatchBestDriver() {
-        System.out.println("\n=== AUTO MATCH BEST DRIVER ===");
-        
-        int requestID = getIntInput("Enter Request ID: ");
-        Request request = requestMap.get(requestID);
-        
-        if (request == null) {
-            System.out.println("Request not found!");
-            return;
-        }
-        
-        if (!request.getStatus().equals("Pending")) {
-            System.out.println("Request is already " + request.getStatus());
-            return;
-        }
-        
-        // Find best driver using Heap
-        Heap<Driver> driverHeap = new Heap<>((d1, d2) -> {
-            String pickup = request.getPickupLocation();
-            
-            // Get distances
-            double dist1 = campusGraph.getDistance(d1.getCurrentLocation(), pickup);
-            double dist2 = campusGraph.getDistance(d2.getCurrentLocation(), pickup);
-            
-            // If distance not found, use large number
-            if (dist1 == -1.0) dist1 = 999.0;
-            if (dist2 == -1.0) dist2 = 999.0;
-            
-            // Compare by distance first
-            if (dist1 < dist2) return -1;
-            if (dist1 > dist2) return 1;
-            
-            // If same distance, compare by rating
-            return Double.compare(d2.getRating(), d1.getRating());
-        });
-        
-        // Add all available drivers to heap
-        for (int id : knownDriverIDs) {
-            Driver d = driverMap.get(id);
-            if (d != null && d.isAvailable()) {
-                driverHeap.insert(d);
-            }
-        }
-        
-        if (driverHeap.isEmpty()) {
-            System.out.println("No drivers available!");
-            return;
-        }
-        
-        // Get best driver
-        Driver bestDriver = driverHeap.extract();
-        
-        // Match
-        request.setAssignedDriverID(bestDriver.getDriverID());
-        request.setStatus("Accepted");
-        bestDriver.setAvailable(false);
-        bestDriver.incrementTotalRides();
-        bestDriver.addAcceptedRequest(requestID);
-        
-        // Add to student history
-        Student student = studentMap.get(request.getStudentID());
-        if (student != null) {
-            student.addRideToHistory(requestID);
-        }
-        
-        actionHistory.push("MATCH_DRIVER:" + requestID + ":" + bestDriver.getDriverID());
-        
-        System.out.println("Best driver automatically selected!");
-        System.out.println("Driver: " + bestDriver.getName());
-        System.out.println("Rating: " + String.format("%.1f", bestDriver.getRating()));
-        System.out.println("Distance from pickup: " + 
-            campusGraph.getDistance(bestDriver.getCurrentLocation(), request.getPickupLocation()) + " km");
-    }
-    
-    // Helper method to show available drivers briefly
-    private static void viewAvailableDriversShort() {
-        for (int id : knownDriverIDs) {
-            Driver d = driverMap.get(id);
-            if (d != null && d.isAvailable()) {
-                System.out.println("  [" + id + "] " + d.getName() + " - " + 
-                    d.getVehicleType() + " - Rating: " + 
-                    String.format("%.1f", d.getRating()));
-            }
-        }
-    }
-    
     // View student ride history
     private static void viewStudentRideHistory() {
-        System.out.println("\n=== STUDENT RIDE HISTORY ===");
+        System.out.println("\n=== MY RIDE HISTORY ===");
         
-        int studentID = getIntInput("Enter Student ID: ");
+        int studentID = getIntInput("Enter your Student ID: ");
         Student student = studentMap.get(studentID);
         
         if (student == null) {
@@ -497,13 +414,13 @@ public class Main {
     
     // View driver accepted requests
     private static void viewDriverAcceptedRequests() {
-        System.out.println("\n=== DRIVER ACCEPTED REQUESTS ===");
+        System.out.println("\n=== MY ACCEPTED RIDES ===");
         
-        int driverID = getIntInput("Enter Driver ID: ");
+        int driverID = getIntInput("Enter your Rider ID: ");
         Driver driver = driverMap.get(driverID);
         
         if (driver == null) {
-            System.out.println("Driver not found!");
+            System.out.println("Rider not found!");
             return;
         }
         
@@ -513,13 +430,13 @@ public class Main {
     
     // Update driver location
     private static void updateDriverLocation() {
-        System.out.println("\n=== UPDATE DRIVER LOCATION ===");
+        System.out.println("\n=== UPDATE MY LOCATION ===");
         
-        int driverID = getIntInput("Enter Driver ID: ");
+        int driverID = getIntInput("Enter your Rider ID: ");
         Driver driver = driverMap.get(driverID);
         
         if (driver == null) {
-            System.out.println("Driver not found!");
+            System.out.println("Rider not found!");
             return;
         }
         
@@ -531,75 +448,16 @@ public class Main {
         System.out.println("Location updated successfully!");
     }
     
-    // View campus routes
-    private static void viewCampusRoutes() {
-        System.out.println("\n=== CAMPUS ROUTES ===");
-        
-        String[] locations = {"Gate", "Gulshan", "Clifton", "DHA", "Saddar"};
-        
-        for (String location : locations) {
-            campusGraph.displayLocation(location);
+    // Helper method to show available drivers briefly
+    private static void viewAvailableDriversShort() {
+        for (int id : knownDriverIDs) {
+            Driver d = driverMap.get(id);
+            if (d != null && d.isAvailable()) {
+                System.out.println("  [" + id + "] " + d.getName() + " - " + 
+                    d.getVehicleType() + " - Rating: " + 
+                    String.format("%.1f", d.getRating()));
+            }
         }
-    }
-    
-    // Undo last action
-    private static void undoLastAction() {
-        System.out.println("\n=== UNDO LAST ACTION ===");
-        
-        if (actionHistory.isEmpty()) {
-            System.out.println("No actions to undo!");
-            return;
-        }
-        
-        String lastAction = actionHistory.pop();
-        System.out.println("Last action: " + lastAction);
-        
-        String[] parts = lastAction.split(":");
-        String actionType = parts[0];
-        
-        switch (actionType) {
-            case "REGISTER_STUDENT":
-                int studentID = Integer.parseInt(parts[1]);
-                studentMap.remove(studentID);
-                System.out.println("Student registration undone!");
-                break;
-                
-            case "REGISTER_DRIVER":
-                int driverID = Integer.parseInt(parts[1]);
-                driverMap.remove(driverID);
-                System.out.println("Driver registration undone!");
-                break;
-                
-            case "GENERATE_REQUEST":
-                int requestID = Integer.parseInt(parts[1]);
-                requestMap.remove(requestID);
-                System.out.println("Request generation undone!");
-                break;
-                
-            case "MATCH_DRIVER":
-                int reqID = Integer.parseInt(parts[1]);
-                int drvID = Integer.parseInt(parts[2]);
-                Request req = requestMap.get(reqID);
-                Driver drv = driverMap.get(drvID);
-                if (req != null) {
-                    req.setStatus("Pending");
-                    req.setAssignedDriverID(null);
-                }
-                if (drv != null) {
-                    drv.setAvailable(true);
-                }
-                System.out.println("Driver matching undone!");
-                break;
-                
-            default:
-                System.out.println("Unknown action type!");
-        }
-    }
-    
-    // View action history
-    private static void viewActionHistory() {
-        System.out.println("\n=== ACTION HISTORY ===");
-        actionHistory.displayDetailed();
     }
     
     // Helper method to get integer input

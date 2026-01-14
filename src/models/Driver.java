@@ -22,7 +22,7 @@ public class Driver {
         this.phoneNumber = phoneNumber;
         this.vehicleType = vehicleType;
         this.vehicleNumber = vehicleNumber;
-        this.currentLocation = "Gate";
+        this.currentLocation = "";
         this.isAvailable = true;
         this.rating = 5.0;
         this.totalRides = 0;
