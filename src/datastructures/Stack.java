@@ -1,8 +1,6 @@
 package datastructures;
 
 public class Stack<T> {
-    
-    // Inner Node class
     private class Node {
         T data;
         Node next;
@@ -16,13 +14,12 @@ public class Stack<T> {
     private Node top;
     private int size;
     
-    // Constructor
     public Stack() {
         this.top = null;
         this.size = 0;
     }
     
-    // Push - insert at top
+    // Push
     public void push(T data) {
         Node newNode = new Node(data);
         newNode.next = top;
@@ -30,7 +27,7 @@ public class Stack<T> {
         size++;
     }
     
-    // Pop - remove from top
+    // Pop
     public T pop() {
         if (isEmpty()) {
             System.out.println("Stack is empty!");
@@ -43,7 +40,7 @@ public class Stack<T> {
         return data;
     }
     
-    // Peek - view top element without removing
+    // Peek
     public T peek() {
         if (isEmpty()) {
             System.out.println("Stack is empty!");
@@ -52,23 +49,21 @@ public class Stack<T> {
         return top.data;
     }
     
-    // Check if empty
     public boolean isEmpty() {
         return top == null;
     }
     
-    // Get size
     public int size() {
         return size;
     }
     
-    // Clear the stack
+    // Clear stack
     public void clear() {
         top = null;
         size = 0;
     }
     
-    // Display stack
+    // Display
     public void display() {
         if (isEmpty()) {
             System.out.println("Stack is empty!");
@@ -84,7 +79,6 @@ public class Stack<T> {
         System.out.println();
     }
     
-    // Display with details
     public void displayDetailed() {
         if (isEmpty()) {
             System.out.println("Stack is empty!");

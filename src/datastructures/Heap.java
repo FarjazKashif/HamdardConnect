@@ -109,16 +109,15 @@ public class Heap<T> {
     private void heapifyDown(int index) {
         while (hasLeftChild(index)) {
             int smallerChildIndex = leftChild(index);
-            
             if (hasRightChild(index) && 
                 comparator.compare((T)array[rightChild(index)], 
-                                 (T)array[leftChild(index)]) < 0) {
+                (T)array[leftChild(index)]) < 0) {
                 smallerChildIndex = rightChild(index);
             }
             
             if (comparator.compare((T)array[index], 
-                                 (T)array[smallerChildIndex]) < 0) {
-                break;
+                (T)array[smallerChildIndex]) < 0) {
+                    break;
             }
             
             swap(index, smallerChildIndex);

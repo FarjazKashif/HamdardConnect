@@ -7,7 +7,6 @@ import models.Request;
 import models.Student;
 
 public class Main {
-    
     // System-wide data structures
     private static HashMap<Integer, Student> studentMap = new HashMap<>();
     private static HashMap<Integer, Driver> driverMap = new HashMap<>();
